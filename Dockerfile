@@ -1,16 +1,20 @@
-FROM python:3.11
+# Use a base image that includes Python
+FROM python:3.11-slim
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# 소스 코드 복사
+# Copy the requirements.txt file into the container
+COPY requirements.txt .
+
+# Install the Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire current directory contents into the container
 COPY . .
 
-# .env 파일 복사
-COPY .env /app/.env
+# Set the command to run your application
+CMD ["python", "main.py"]
 
-# Python 패키지 설치
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-# uvicorn 실행
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Expose the port that the app runs on (if necessary)
+EXPOSE 8000
